@@ -1,0 +1,23 @@
+name: duck_shop
+description: A new Flutter application.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^0.1.2
+  bloc: ^1.0.0
+  flutter_bloc: ^1.0.0
+  equatable: ^0.6.1
+  uuid: ^2.0.2
+  shared_preferences: ^0.5.4
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
