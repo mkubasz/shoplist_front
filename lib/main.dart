@@ -1,13 +1,13 @@
-import 'package:duck_shop/blocs/dashboard_state.dart';
-import 'package:duck_shop/blocs/data_manager_state.dart';
+import 'package:duck_shop/blocs/dashboard_bloc.dart';
+import 'package:duck_shop/blocs/data_manager_bloc.dart';
 import 'package:duck_shop/infrastructure/shop_list_repository.dart';
 import 'package:duck_shop/widgets/dashboard_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() => runApp(BlocProvider<ManagerBloc>(
+void main() => runApp(BlocProvider<DataManagerBloc>(
       builder: (context) =>
-          ManagerBloc(ShopListRepository())..add(SetDefaultDataManager()),
+          DataManagerBloc(ShopListRepository())..add(SetDefaultDataManager()),
       child: App(),
     ));
 

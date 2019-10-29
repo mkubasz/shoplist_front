@@ -40,18 +40,28 @@ class BoughtProduct extends DataManagerEvent {
   const BoughtProduct(this.product);
 }
 
+class UpdateProduct extends DataManagerEvent {
+  final Product product;
+  const UpdateProduct(this.product);
+}
+
 class RemoveProduct extends DataManagerEvent {
   final Product product;
   const RemoveProduct(this.product);
 }
 
-class ManagerBloc extends Bloc<DataManagerEvent, DataManagerState> {
+class FilterProducts extends DataManagerEvent {
+  final bool bought;
+  const FilterProducts(this.bought);
+}
+
+class DataManagerBloc extends Bloc<DataManagerEvent, DataManagerState> {
   ShopListRepository shopListRepository;
 
-  ManagerBloc(this.shopListRepository);
+  DataManagerBloc(this.shopListRepository);
 
   @override
-  DataManagerState get initialState => InitializeDataManager();
+  DataManagerState get initialState => DefaultDataManager([]);
 
   @override
   Stream<DataManagerState> mapEventToState(DataManagerEvent event) async* {
@@ -61,15 +71,29 @@ class ManagerBloc extends Bloc<DataManagerEvent, DataManagerState> {
     }
     if (event is AddProduct) {
       var list = (state as DefaultDataManager).shopItem..add(event.product);
+      list.sort((p1, p2) => p1.category.compareTo(p2.category));
       shopListRepository.add(event.product);
       yield DefaultDataManager(list);
     }
     if (event is BoughtProduct) {
       await shopListRepository.update(event.product);
+      var list = await shopListRepository.getAll();
+      list = list.map((item) {
+        if (item.id == event.product.id) {
+          item.bought = event.product.bought;
+        }
+        return item;
+      }).toList();
+
+      yield DefaultDataManager(
+          list.where((p) => p.bought != event.product.bought).toList());
+    }
+    if (event is UpdateProduct) {
+      await shopListRepository.update(event.product);
       yield DefaultDataManager(
           (state as DefaultDataManager).shopItem.map((item) {
         if (item.id == event.product.id) {
-          item.bought = event.product.bought;
+          item = event.product;
         }
         return item;
       }).toList());
@@ -81,6 +105,12 @@ class ManagerBloc extends Bloc<DataManagerEvent, DataManagerState> {
           .shopItem
           .where((item) => item.id != event.product.id)
           .toList());
+    }
+
+    if (event is FilterProducts) {
+      var list = await shopListRepository.getAll();
+      yield DefaultDataManager(
+          list.where((item) => item.bought == event.bought).toList());
     }
   }
 }

@@ -15,6 +15,8 @@ dependencies:
   equatable: ^0.6.1
   uuid: ^2.0.2
   shared_preferences: ^0.5.4
+  http: ^0.12.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

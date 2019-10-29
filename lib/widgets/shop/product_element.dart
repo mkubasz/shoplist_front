@@ -1,13 +1,16 @@
 import 'dart:math';
 
-import 'package:duck_shop/blocs/data_manager_state.dart';
+import 'package:duck_shop/blocs/data_manager_bloc.dart';
 import 'package:duck_shop/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'add_edit_product.dart';
+
 class ProductElement extends StatefulWidget {
   Product product;
-  ProductElement({this.product});
+  void Function() remove;
+  ProductElement({this.product, this.remove});
 
   @override
   State<StatefulWidget> createState() => _ProductState();
@@ -23,50 +26,75 @@ class _ProductState extends State<ProductElement> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          IconButton(
-            icon: Icon(Icons.check_circle_outline, color: color),
-            onPressed: () {
-              setState(() {
-                widget.product.bought = !widget.product.bought;
-//                  BlocProvider.of<ManagerBloc>(context)
-//                      .add(BoughtProduct(widget.product));
-                this.color = widget.product.bought ? Colors.green : Colors.grey;
-              });
-            },
-          ),
-          Column(
-            children: <Widget>[
-              Text(
-                'Produkt',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text('${widget.product.name}'),
-            ],
-          ),
-          Column(
-            children: <Widget>[
-              Text(
-                'Opis',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text('${widget.product.description}'),
-            ],
-          ),
-          Column(
-            children: <Widget>[
-              Text(
-                'Ilosc',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text('${widget.product.number}'),
-            ],
-          ),
-        ],
-      ),
+    return Dismissible(
+      key: Key(UniqueKey().toString()),
+      background: Container(color: Colors.red),
+      child: new GestureDetector(
+          onLongPress: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      AddEditProduct(product: widget.product)),
+            );
+          },
+          child: Card(
+            shape: widget.product.bought
+                ? RoundedRectangleBorder(
+                    side: BorderSide(color: Colors.green, width: 2.0),
+                    borderRadius: BorderRadius.circular(4.0))
+                : RoundedRectangleBorder(),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.check_circle_outline, color: color),
+                  onPressed: () {
+                    setState(() {
+                      widget.product.bought = !widget.product.bought;
+                      BlocProvider.of<DataManagerBloc>(context)
+                          .add(BoughtProduct(widget.product));
+                      this.color =
+                          widget.product.bought ? Colors.green : Colors.grey;
+                    });
+                  },
+                ),
+                Column(
+                  children: <Widget>[
+                    Text(
+                      'Produkt',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text('${widget.product.name}'),
+                  ],
+                ),
+                Flexible(
+                    child: Column(
+                  children: <Widget>[
+                    Text(
+                      'Opis',
+                      maxLines: null,
+                      softWrap: true,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text('${widget.product.description}'),
+                  ],
+                )),
+                Column(
+                  children: <Widget>[
+                    Text(
+                      'Ilosc',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text('${widget.product.number}'),
+                  ],
+                ),
+              ],
+            ),
+          )),
+      onDismissed: (direction) {
+        widget.remove();
+      },
     );
   }
 }
