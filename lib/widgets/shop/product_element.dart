@@ -17,12 +17,17 @@ class ProductElement extends StatefulWidget {
 }
 
 class _ProductState extends State<ProductElement> {
-  MaterialColor color;
   @override
   void initState() {
-    color = widget.product.bought ? Colors.green : Colors.grey;
     super.initState();
   }
+
+  Map<String, Color> colorCategory = {
+    'Owoce': Colors.purple,
+    'Warzywa': Colors.amber,
+    'Mięso': Colors.red,
+    'Inne': Colors.blue
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -38,59 +43,76 @@ class _ProductState extends State<ProductElement> {
                       AddEditProduct(product: widget.product)),
             );
           },
-          child: Card(
-            shape: widget.product.bought
-                ? RoundedRectangleBorder(
-                    side: BorderSide(color: Colors.green, width: 2.0),
-                    borderRadius: BorderRadius.circular(4.0))
-                : RoundedRectangleBorder(),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.check_circle_outline, color: color),
-                  onPressed: () {
-                    setState(() {
-                      widget.product.bought = !widget.product.bought;
-                      BlocProvider.of<DataManagerBloc>(context)
-                          .add(BoughtProduct(widget.product));
-                      this.color =
-                          widget.product.bought ? Colors.green : Colors.grey;
-                    });
-                  },
+          child: Stack(
+            children: <Widget>[
+              Container(
+                decoration: new BoxDecoration(
+                  color: colorCategory[widget.product.category],
+                  borderRadius: new BorderRadius.only(
+                      topLeft: const Radius.circular(5),
+                      bottomLeft: const Radius.circular(5)),
                 ),
-                Column(
+                height: 52,
+                width: 12,
+              ),
+              Card(
+                shape: widget.product.bought
+                    ? RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.green, width: 2.0),
+                        borderRadius: BorderRadius.circular(4.0))
+                    : RoundedRectangleBorder(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    Text(
-                      'Produkt',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Container(
+                      child: IconButton(
+                        icon: Icon(Icons.check_circle_outline,
+                            color: widget.product.bought
+                                ? Colors.green
+                                : Colors.grey),
+                        onPressed: () {
+                          setState(() {
+                            widget.product.bought = !widget.product.bought;
+                            BlocProvider.of<DataManagerBloc>(context)
+                                .add(BoughtProduct(widget.product));
+                          });
+                        },
+                      ),
                     ),
-                    Text('${widget.product.name}'),
+                    Column(
+                      children: <Widget>[
+                        Text(
+                          'Produkt',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text('${widget.product.name}'),
+                      ],
+                    ),
+                    Flexible(
+                        child: Column(
+                      children: <Widget>[
+                        Text(
+                          'Opis',
+                          maxLines: null,
+                          softWrap: true,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text('${widget.product.description}'),
+                      ],
+                    )),
+                    Column(
+                      children: <Widget>[
+                        Text(
+                          'Ilosc',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text('${widget.product.number}'),
+                      ],
+                    ),
                   ],
                 ),
-                Flexible(
-                    child: Column(
-                  children: <Widget>[
-                    Text(
-                      'Opis',
-                      maxLines: null,
-                      softWrap: true,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text('${widget.product.description}'),
-                  ],
-                )),
-                Column(
-                  children: <Widget>[
-                    Text(
-                      'Ilosc',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text('${widget.product.number}'),
-                  ],
-                ),
-              ],
-            ),
+              )
+            ],
           )),
       onDismissed: (direction) {
         widget.remove();

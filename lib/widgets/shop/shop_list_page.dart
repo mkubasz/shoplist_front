@@ -8,10 +8,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'add_edit_product.dart';
 
-class ShopListElement extends StatefulWidget {
+class ShopListPage extends StatefulWidget {
   List<Product> shopList;
 
-  ShopListElement(this.shopList);
+  ShopListPage(this.shopList);
 
   @override
   State<StatefulWidget> createState() {
@@ -19,7 +19,7 @@ class ShopListElement extends StatefulWidget {
   }
 }
 
-class _ShopListState extends State<ShopListElement> {
+class _ShopListState extends State<ShopListPage> {
   StreamController<Product> streamController = StreamController();
   @override
   void initState() {

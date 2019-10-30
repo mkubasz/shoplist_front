@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 class Product extends Equatable {
   String id;
   String name;
+  String session = "Mateusz";
   String description = 'Brak';
   String image = '';
   String category;
@@ -26,7 +27,8 @@ class Product extends Equatable {
         description = json['description'],
         category = json['category'],
         number = json['number'],
-        bought = json['bought'];
+        bought = json['bought'],
+        image = json['image'];
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -34,6 +36,7 @@ class Product extends Equatable {
         'description': description,
         'category': category,
         'number': number,
-        'bought': bought
+        'bought': bought,
+        'image': image
       };
 }

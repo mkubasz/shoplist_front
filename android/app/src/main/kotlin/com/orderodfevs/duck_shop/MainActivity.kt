@@ -1,4 +1,4 @@
-package com.orderodfevs.duck_shop
+package com.orderofdevs.duck_shop
 
 import android.os.Bundle
 import io.flutter.app.FlutterActivity

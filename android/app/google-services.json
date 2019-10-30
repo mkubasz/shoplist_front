@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "827837498326",
+    "firebase_url": "https://flutterapi-75f76.firebaseio.com",
+    "project_id": "flutterapi-75f76",
+    "storage_bucket": "flutterapi-75f76.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:827837498326:android:e8c171518cc99f64b79a77",
+        "android_client_info": {
+          "package_name": "com.orderodfevs.duck_shop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "827837498326-nb6om2ubdnelcfd18gruuten2n4q0ofe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAi2CYj4rdd7itZKJjRAXac3NDp1p_I-zQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "827837498326-nb6om2ubdnelcfd18gruuten2n4q0ofe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:827837498326:android:a06f6074c77fceeab79a77",
+        "android_client_info": {
+          "package_name": "com.orderofdevs.duck_shop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "827837498326-nb6om2ubdnelcfd18gruuten2n4q0ofe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAi2CYj4rdd7itZKJjRAXac3NDp1p_I-zQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "827837498326-nb6om2ubdnelcfd18gruuten2n4q0ofe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
