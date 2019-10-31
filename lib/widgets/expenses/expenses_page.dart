@@ -14,7 +14,7 @@ class ExpensesPage extends StatefulWidget {
 class _ExpensesState extends State<ExpensesPage> {
   File _image;
   Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(image);
     FirebaseVision.instance;
     final TextRecognizer textRecognizer =

@@ -6,7 +6,11 @@ import 'in_memory_data_provider.dart';
 class ShopListRepository {
   InMemoryDataProvider inMemoryDataProvider = InMemoryDataProvider();
   NetworkDataProvider networkDataProvider = NetworkDataProvider();
-  Future<List<Product>> getAll() async {
+  Future<List<Product>> getAll({bool sync = false}) async {
+    if (sync) {
+      return await networkDataProvider.getAll();
+    }
+
     return inMemoryDataProvider.getAll();
   }
 

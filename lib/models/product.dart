@@ -19,7 +19,8 @@ class Product extends Equatable {
       this.bought = false});
 
   @override
-  List<Object> get props => [id, name, description, number, bought];
+  List<Object> get props =>
+      [id, session, name, description, number, bought, session, image];
 
   Product.fromMappedJson(Map<String, dynamic> json)
       : name = json['name'],
@@ -28,7 +29,8 @@ class Product extends Equatable {
         category = json['category'],
         number = json['number'],
         bought = json['bought'],
-        image = json['image'];
+        image = json['image'],
+        session = json['session'];
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -37,6 +39,7 @@ class Product extends Equatable {
         'category': category,
         'number': number,
         'bought': bought,
-        'image': image
+        'image': image,
+        'session': session
       };
 }

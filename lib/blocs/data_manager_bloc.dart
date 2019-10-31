@@ -55,6 +55,8 @@ class FilterProducts extends DataManagerEvent {
   const FilterProducts(this.bought);
 }
 
+class SyncData extends DataManagerEvent {}
+
 class DataManagerBloc extends Bloc<DataManagerEvent, DataManagerState> {
   ShopListRepository shopListRepository;
 
@@ -111,6 +113,13 @@ class DataManagerBloc extends Bloc<DataManagerEvent, DataManagerState> {
       var list = await shopListRepository.getAll();
       yield DefaultDataManager(
           list.where((item) => item.bought == event.bought).toList());
+    }
+
+    if (event is SyncData) {
+      var list = await shopListRepository.getAll(sync: true);
+
+      yield DefaultDataManager(
+          list..addAll((state as DefaultDataManager).shopItem));
     }
   }
 }

@@ -1,11 +1,11 @@
 import 'package:duck_shop/blocs/data_manager_bloc.dart';
-import 'package:duck_shop/models/product.dart';
+import 'package:duck_shop/blocs/settings_bloc.dart';
+import 'package:duck_shop/models/settings.dart';
 import 'package:duck_shop/widgets/expenses/expenses_page.dart';
-import 'package:duck_shop/widgets/shop/add_edit_product.dart';
+import 'package:duck_shop/widgets/settings/settings_page.dart';
 import 'package:duck_shop/widgets/shop/shop_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uuid/uuid.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -33,7 +33,15 @@ class _DashboardState extends State<DashboardPage> {
         }
       case 2:
         {
-          return Container();
+          return BlocBuilder<SettingsBloc, SettingsState>(
+              builder: (context, state) {
+            if (state is DefaultSettings) {
+              return SettingsPage(settings: state.settings);
+            }
+            return SettingsPage(
+              settings: Settings(),
+            );
+          });
         }
     }
   }
@@ -46,7 +54,11 @@ class _DashboardState extends State<DashboardPage> {
           actions: <Widget>[
             FlatButton(
               color: Colors.green,
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  BlocProvider.of<DataManagerBloc>(context).add(SyncData());
+                });
+              },
               child: Text('Sync'),
             )
           ],
