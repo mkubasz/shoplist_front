@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:duck_shop/blocs/data_manager_bloc.dart';
 import 'package:duck_shop/models/product.dart';
+import 'package:duck_shop/models/products_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,7 +10,8 @@ import 'package:uuid/uuid.dart';
 
 class AddEditProduct extends StatefulWidget {
   Product product;
-  AddEditProduct({this.product});
+  List<ProductsGroup> productsGroup;
+  AddEditProduct({this.product, this.productsGroup});
 
   @override
   State<StatefulWidget> createState() {
@@ -19,16 +21,17 @@ class AddEditProduct extends StatefulWidget {
 
 class _AddEditProductState extends State<AddEditProduct> {
   String dropdownValue = 'Owoce';
+  String productsGroupValue;
   Product _product;
   bool editable = false;
   File _image;
-
   @override
   void initState() {
     editable = widget.product != null;
     _product = widget.product ??
         Product(id: Uuid().v1(), number: 1, category: 'Owoce');
     dropdownValue = _product.category;
+    productsGroupValue = widget.productsGroup[0].name;
     super.initState();
   }
 
@@ -58,6 +61,29 @@ class _AddEditProductState extends State<AddEditProduct> {
                     _product.name = value;
                   });
                 },
+              ),
+              DropdownButton<String>(
+                value: productsGroupValue,
+                icon: Icon(Icons.arrow_downward),
+                iconSize: 24,
+                elevation: 16,
+                style: TextStyle(color: Colors.deepPurple),
+                underline: Container(
+                  height: 2,
+                  color: Colors.deepPurpleAccent,
+                ),
+                onChanged: (String newValue) {
+                  setState(() {
+                    productsGroupValue = newValue;
+                  });
+                },
+                items: widget.productsGroup
+                    .map<DropdownMenuItem<String>>((ProductsGroup value) {
+                  return DropdownMenuItem<String>(
+                    value: value.name,
+                    child: Text(value.name),
+                  );
+                }).toList(),
               ),
               TextFormField(
                 initialValue: _product.description ?? '',
@@ -123,9 +149,13 @@ class _AddEditProductState extends State<AddEditProduct> {
                       if (_image != null) {
                         _product.image = _image.path;
                       }
+                      _product.projectsGroupID = widget.productsGroup
+                          .firstWhere(
+                              (element) => element.name == productsGroupValue)
+                          .id;
                       BlocProvider.of<DataManagerBloc>(context).add(editable
                           ? UpdateProduct(_product)
-                          : AddProduct(_product));
+                          : AddProduct(product: _product));
                       Navigator.of(context).pop();
                     });
                   },

@@ -1,4 +1,5 @@
 import 'package:duck_shop/blocs/data_manager_bloc.dart';
+import 'package:duck_shop/blocs/products_group_data_manager.dart';
 import 'package:duck_shop/blocs/settings_bloc.dart';
 import 'package:duck_shop/models/settings.dart';
 import 'package:duck_shop/widgets/expenses/expenses_page.dart';
@@ -19,10 +20,10 @@ class _DashboardState extends State<DashboardPage> {
     switch (selectedTab) {
       case 0:
         {
-          return BlocBuilder<DataManagerBloc, DataManagerState>(
+          return BlocBuilder<ProductsGroupBloc, ProductsGroupState>(
               builder: (context, state) {
-            if (state is DefaultDataManager) {
-              return ShopListPage(state.shopItem);
+            if (state is DefaultProductsGroup) {
+              return ShopListPage(state.productsGroup);
             }
             return ShopListPage([]);
           });

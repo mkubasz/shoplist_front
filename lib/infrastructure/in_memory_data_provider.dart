@@ -8,9 +8,11 @@ class InMemoryDataProvider {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<Product> list = List();
     prefs.getKeys().forEach((key) {
-      var element = prefs.getString(key);
-      if (element.isNotEmpty) {
-        list.add(Product.fromMappedJson(json.decode(element)));
+      if (key != "productsGroup") {
+        var element = prefs.getString(key);
+        if (element.isNotEmpty) {
+          list.add(Product.fromMappedJson(json.decode(element)));
+        }
       }
     });
 

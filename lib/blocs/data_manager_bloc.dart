@@ -32,7 +32,7 @@ class SetDefaultDataManager extends DataManagerEvent {}
 
 class AddProduct extends DataManagerEvent {
   final Product product;
-  const AddProduct(this.product);
+  const AddProduct({this.product});
 }
 
 class BoughtProduct extends DataManagerEvent {
@@ -69,7 +69,8 @@ class DataManagerBloc extends Bloc<DataManagerEvent, DataManagerState> {
   Stream<DataManagerState> mapEventToState(DataManagerEvent event) async* {
     if (event is SetDefaultDataManager) {
       var list = await shopListRepository.getAll() ?? [];
-      yield DefaultDataManager(list);
+
+      yield DefaultDataManager(list.where((filter) => !filter.bought).toList());
     }
     if (event is AddProduct) {
       var list = (state as DefaultDataManager).shopItem..add(event.product);

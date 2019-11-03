@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:duck_shop/blocs/data_manager_bloc.dart';
+import 'package:duck_shop/blocs/products_group_data_manager.dart';
 import 'package:duck_shop/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,11 +36,20 @@ class _ProductState extends State<ProductElement> {
       child: new GestureDetector(
           onLongPress: () {
             Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      AddEditProduct(product: widget.product)),
-            );
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        BlocBuilder<ProductsGroupBloc, ProductsGroupState>(
+                          builder: (context, state) {
+                            if (state is DefaultProductsGroup) {
+                              return AddEditProduct(
+                                  product: widget.product,
+                                  productsGroup: state.productsGroup);
+                            } else {
+                              return AddEditProduct();
+                            }
+                          },
+                        )));
           },
           child: Stack(
             children: <Widget>[

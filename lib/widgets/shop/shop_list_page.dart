@@ -1,15 +1,20 @@
 import 'dart:async';
 
 import 'package:duck_shop/blocs/data_manager_bloc.dart';
+import 'package:duck_shop/blocs/products_group_data_manager.dart';
 import 'package:duck_shop/models/product.dart';
+import 'package:duck_shop/models/products_group.dart';
+import 'package:duck_shop/widgets/shop/add_edit_products_group.dart';
 import 'package:duck_shop/widgets/shop/product_element.dart';
+import 'package:duck_shop/widgets/shop/products_group_element.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'add_edit_product.dart';
 
 class ShopListPage extends StatefulWidget {
-  List<Product> shopList;
+  List<ProductsGroup> shopList = [];
 
   ShopListPage(this.shopList);
 
@@ -20,21 +25,6 @@ class ShopListPage extends StatefulWidget {
 }
 
 class _ShopListState extends State<ShopListPage> {
-  StreamController<Product> streamController = StreamController();
-  @override
-  void initState() {
-    super.initState();
-    streamController.stream.listen((data) {
-      BlocProvider.of<DataManagerBloc>(context).add(RemoveProduct(data));
-    });
-  }
-
-  @override
-  void dispose() {
-    streamController.close();
-    super.dispose();
-  }
-
   int _selectedIndex = 0;
   void _onItemTapped(int index) {
     setState(() {
@@ -57,29 +47,59 @@ class _ShopListState extends State<ShopListPage> {
         ],
         onTap: _onItemTapped,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddEditProduct()),
-          );
-        },
-        child: Icon(Icons.add),
+      floatingActionButton: SpeedDial(
+        child: Icon(Icons.library_add),
+        children: [
+          SpeedDialChild(
+              child: Icon(Icons.add),
+              label: "Produkt",
+              onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            BlocBuilder<ProductsGroupBloc, ProductsGroupState>(
+                              builder: (context, state) {
+                                if (state is DefaultProductsGroup) {
+                                  return AddEditProduct(
+                                      productsGroup: state.productsGroup);
+                                } else {
+                                  return AddEditProduct();
+                                }
+                              },
+                            )),
+                  )),
+          SpeedDialChild(
+              child: Icon(Icons.list),
+              label: "Nowa grupa",
+              onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            BlocBuilder<ProductsGroupBloc, ProductsGroupState>(
+                              builder: (context, state) {
+                                if (state is DefaultProductsGroup) {
+                                  return AddEditProductsGroup(
+                                      productsGroup: state.productsGroup);
+                                } else {
+                                  return AddEditProductsGroup();
+                                }
+                              },
+                            )),
+                  ))
+        ],
       ),
-      body: ListView.builder(
-          itemCount: widget.shopList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.0),
-              child: ProductElement(
-                  product: widget.shopList[index],
-                  remove: () {
-                    setState(() {
-                      streamController.add(widget.shopList.removeAt(index));
-                    });
-                  }),
-            );
-          }),
+      body: widget.shopList?.isEmpty ?? true
+          ? ListView()
+          : ListView.builder(
+              itemCount: widget.shopList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.0),
+                  child: ProductsGroupElement(
+                    productsGroup: widget.shopList[index],
+                  ),
+                );
+              }),
     );
   }
 }
